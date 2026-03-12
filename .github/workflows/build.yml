@@ -69,4 +69,4 @@ jobs:
         run: |
           cd ansible/
           # 使用 SSH 密钥直接连接，不需要解密 aws.pem
-          ansible-playbook -i hosts deploy.yml
+          ansible-playbook -i hosts deploy.yml -e "sudo_password=${{ secrets.SUDO_PASSWORD }}"
