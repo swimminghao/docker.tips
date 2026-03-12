@@ -1,4 +1,4 @@
-FROM python:3.9.5-slim AS builder
+FROM python:3.9.18-slim-bullseye AS builder
 
 COPY ./ /app
 
