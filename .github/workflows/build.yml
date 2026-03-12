@@ -1,4 +1,4 @@
-name: docker image build and push
+name: docker image build and pusha
 on: [push]
 jobs:
   build:
