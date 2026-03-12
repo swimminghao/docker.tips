@@ -1,0 +1,37 @@
+{
+    "name": "Docker DevContainer",
+    "dockerFile": "Dockerfile",
+    "features": {
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {
+            "version": "20.10",
+            "enableNonRootDocker": "true",
+            "moby": "true"
+        },
+        "ghcr.io/devcontainers-contrib/features/pipx-package:1": {}
+    },
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "editor.tabSize": 2,
+                "files.trimTrailingWhitespace": true,
+                "workbench.colorTheme": "Aura Dark",
+                "workbench.iconTheme": "material-icon-theme"
+            },
+            "extensions": [
+                "ms-python.python",
+                "ms-azuretools.vscode-docker",
+                "ms-python.vscode-pylance",
+                "DaltonMenezes.aura-theme",
+                "equinusocio.vsc-material-theme-icons",
+                "redhat.ansible",
+                "GitHub.copilot"
+            ]
+        }
+    },
+    "postCreateCommand": "bash -i -c 'pip install -r requirements.txt'",
+    "remoteUser": "vscode",
+    "runArgs": [
+        "--env-file",
+        ".devcontainer/config/env"
+    ]
+}

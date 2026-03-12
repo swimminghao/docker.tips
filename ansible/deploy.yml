@@ -1,0 +1,45 @@
+# - name: deploy docker.tips
+#   hosts: aws
+#   gather_facts: no
+#   vars:
+#     ansible_connection: ssh
+#     ansible_user: ubuntu
+#     ansible_ssh_private_key_file: ./aws.pem
+
+#   tasks:
+#     - name: stop the old container
+#       shell: docker container stop web
+#       ignore_errors: yes
+
+#     - name: update docker image
+#       shell: docker image pull swimminghao/dockertips:latest
+
+#     - name: create new container
+#       shell: docker container run --rm -d -p 8092:80 --name web swimminghao/dockertips:latest
+- name: deploy docker.tips
+  hosts: aws
+  gather_facts: no
+  vars:
+    ansible_connection: ssh
+    ansible_user: xh
+    ansible_port: 11003
+    ansible_ssh_private_key_file: ~/.ssh/id_rsa.nuc
+    # 或者使用相对路径（如果密钥文件在当前目录）
+    # ansible_ssh_private_key_file: ./id_rsa.nuc
+
+  tasks:
+    - name: stop the old container
+      shell: docker container stop web
+      ignore_errors: yes
+      become: yes
+      become_method: sudo
+
+    - name: update docker image
+      shell: docker image pull swimminghao/dockertips:latest
+      become: yes
+      become_method: sudo
+
+    - name: create new container
+      shell: docker container run --rm -d -p 8092:80 --name web swimminghao/dockertips:latest
+      become: yes
+      become_method: sudo
