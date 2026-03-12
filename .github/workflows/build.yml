@@ -33,17 +33,40 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           tags: swimminghao/dockertips:latest
+  # deploy:
+  #   runs-on: ubuntu-latest
+  #   needs: build
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+  #     - name: deploy to aws
+  #       run: |
+  #         cd ansible/
+  #         pip install ansible
+  #         echo ${{ secrets.ANSIBLE_VAULT }} > vault_pass.txt
+  #         export ANSIBLE_VAULT_PASSWORD_FILE=vault_pass.txt
+  #         ansible-vault decrypt aws.pem
+  #         ansible-playbook -i hosts deploy.yml
   deploy:
     runs-on: ubuntu-latest
     needs: build
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: deploy to aws
+      
+      - name: Setup SSH key (for deploy)
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa.nuc
+          chmod 600 ~/.ssh/id_rsa.nuc
+          ssh-keyscan -p 11003 swimminghao.asuscomm.com >> ~/.ssh/known_hosts
+      
+      - name: Install Ansible
+        run: |
+          pip install ansible
+      
+      - name: Deploy to AWS
         run: |
           cd ansible/
-          pip install ansible
-          echo ${{ secrets.ANSIBLE_VAULT }} > vault_pass.txt
-          export ANSIBLE_VAULT_PASSWORD_FILE=vault_pass.txt
-          ansible-vault decrypt aws.pem
+          # 使用 SSH 密钥直接连接，不需要解密 aws.pem
           ansible-playbook -i hosts deploy.yml

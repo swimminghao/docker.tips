@@ -1,2 +1,2 @@
 [aws]
-swimminghao.asuscomm.com
+swimminghao.asuscomm.com ansible_port=11003 ansible_user=xh
