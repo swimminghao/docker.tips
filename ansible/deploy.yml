@@ -27,20 +27,21 @@
     # 或者使用相对路径（如果密钥文件在当前目录）
     # ansible_ssh_private_key_file: ./id_rsa.nuc
     ansible_become_password: "{{ sudo_password }}"  # 从外部传入
+    ansible_python_interpreter: /bin/sh  # 使用 shell 而不是 Python
 
   tasks:
     - name: stop the old container
-      shell: docker container stop web
+      raw: docker container stop web
       ignore_errors: yes
       become: yes
       become_method: sudo
 
     - name: update docker image
-      shell: docker image pull swimminghao/dockertips:latest
+      raw: docker image pull swimminghao/dockertips:latest
       become: yes
       become_method: sudo
 
     - name: create new container
-      shell: docker container run --rm -d -p 8092:80 --name web swimminghao/dockertips:latest
+      raw: docker container run --rm -d -p 8092:80 --name web swimminghao/dockertips:latest
       become: yes
       become_method: sudo
